@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <!-- Add a link to your favorite icon library (e.g., Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Student List</h1>
+
+        <!-- Search by ID -->
+        <form method="GET" action="{% url 'student_list' %}" class="mb-3">
+            <div class="input-group">
+                <input type="number" name="id" class="form-control" placeholder="Search by ID" value="{{ id_query }}">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search by ID
+                    </button>
+                </div>
+                {% if id_query %}
+                <div class="input-group-append">
+                    <a href="{% url 'student_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+
+        <!-- Search by All Fields -->
+        <form method="GET" action="{% url 'student_list' %}" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search by All Fields" value="{{ query }}">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                {% if query %}
+                <div class="input-group-append">
+                    <a href="{% url 'student_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Mobile Number</th>
+                        <th>Profile Image</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            {% for student in students %}
+                    <tr>
+                        <td>{{ student.id }}</td>
+                        <td>{{ student.f_name }}</td>
+                        <td>{{ student.l_name }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.mobile_number }}</td>
+                        <td>
+                            <!-- Use student's ID to generate a unique image URL -->
+                            <img src="https://picsum.photos/50/50?random={{ student.id }}" alt="Profile Image" width="50">
+                        </td>
+                        <td>
+                            <a href="{% url 'update_student' student.pk %}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_student' student.pk %}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7">No students found.</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'create_student' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Create Student
+        </a>
+    </div>
+</body>
+</html>
